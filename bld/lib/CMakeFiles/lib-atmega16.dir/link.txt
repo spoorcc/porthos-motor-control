@@ -1,2 +1,0 @@
-/usr/bin/avr-ar qc liblib-atmega16.a  CMakeFiles/lib-atmega16.dir/lib.c.obj
-/usr/bin/avr-ranlib liblib-atmega16.a
