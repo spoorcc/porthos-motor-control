@@ -1,0 +1,18 @@
+language: cpp
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - cmake
+      - gcc-avr
+
+compiler:
+  - gcc
+
+script:
+  - mkdir -p bld
+  - cd bld
+  - cmake ..
+  - make
+  - make test
