@@ -1,1 +1,0 @@
-/usr/bin/avr-gcc  -Os  -mmcu=atmega16 -Wl,--gc-sections -mrelax -Wl,-Map,toggle-led-atmega16.map CMakeFiles/toggle-led-atmega16.elf.dir/main.c.obj  -o toggle-led-atmega16.elf ../lib/liblib-atmega16.a /usr/avr/lib/libc.a 

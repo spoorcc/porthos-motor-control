@@ -100,5 +100,6 @@ add_definitions("-std=gnu99")
 include_directories(inc)
 
 add_subdirectory(lib)
+add_subdirectory(sim)
 add_subdirectory(bin)
 
