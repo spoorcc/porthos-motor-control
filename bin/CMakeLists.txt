@@ -8,7 +8,7 @@
 # Matthias Kleemann
 
 add_vcd_trace(toggle-led ${AVR_MCU} ${MCU_SPEED}
-     "OUTPUT,5,PORTB"
+     "OUTPUT,2,PORTD"
 )
 
 add_avr_executable(
