@@ -15,7 +15,7 @@ set(AVR_PROGRAMMER avrispmkII)
 set(AVR_UPLOADTOOL_PORT usb)
 
 # AVR and fuses needs to be set
-set(AVR_MCU atmega16)
+set(AVR_MCU atmega328p)
 set(AVR_H_FUSE 0xd9)
 set(AVR_L_FUSE 0xc3)
 
@@ -100,6 +100,5 @@ add_definitions("-std=gnu99")
 include_directories(inc)
 
 add_subdirectory(lib)
-add_subdirectory(sim)
 add_subdirectory(bin)
 
