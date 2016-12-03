@@ -19,7 +19,11 @@ set(AVR_MCU atmega16)
 set(AVR_H_FUSE 0xd9)
 set(AVR_L_FUSE 0xc3)
 
-include(generic-gcc-avr.cmake)
+# needs to be defined for AVR toolchain
+set(MCU_SPEED "4000000UL")
+
+include(CMakeModules/generic-gcc-avr.cmake)
+include(CMakeModules/SimAVR.cmake)
 
 project(porthos-motor-control)
 
@@ -29,6 +33,7 @@ message(STATUS "Current programmer is: ${AVR_PROGRAMMER}")
 message(STATUS "Current upload port is: ${AVR_UPLOADTOOL_PORT}")
 message(STATUS "Current uploadtool options are: ${AVR_UPLOADTOOL_OPTIONS}")
 message(STATUS "Current MCU is set to: ${AVR_MCU}")
+message(STATUS "Current MCU_SPEED is set to: ${MCU_SPEED}")
 message(STATUS "Current H_FUSE is set to: ${AVR_H_FUSE}")
 message(STATUS "Current L_FUSE is set to: ${AVR_L_FUSE}")
 
@@ -36,9 +41,6 @@ message(STATUS "Current L_FUSE is set to: ${AVR_L_FUSE}")
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif(NOT CMAKE_BUILD_TYPE)
-
-# needs to be defined for AVR toolchain
-set(MCU_SPEED "4000000UL")
 
 # some cmake cross-compile necessities
 if(DEFINED ENV{AVR_FIND_ROOT_PATH})
@@ -58,7 +60,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 # not added automatically, since CMAKE_SYSTEM_NAME is "generic"
-set(CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_FIND_ROOT_PATH}/include")
+set(CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_FIND_ROOT_PATH}/include:${SIMAVR_INCLUDE_DIR}")
 set(CMAKE_SYSTEM_LIBRARY_PATH "${CMAKE_FIND_ROOT_PATH}/lib")
 
 # status messages for generating

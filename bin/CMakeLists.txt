@@ -7,9 +7,14 @@
 #
 # Matthias Kleemann
 
+add_vcd_trace(toggle-led ${AVR_MCU} ${MCU_SPEED}
+     "OUTPUT,5,PORTB"
+)
+
 add_avr_executable(
    toggle-led
    main.c
+   ${project_VCD_TRACE_FILE}
 )
 
 # find_library(M_LIB m)
@@ -20,3 +25,4 @@ message(STATUS "avr-libc: ${C_LIB}")
 
 avr_target_link_libraries(toggle-led lib ${C_LIB})
 
+add_sim_target(toggle-led ${AVR_MCU} ${MCU_SPEED})
