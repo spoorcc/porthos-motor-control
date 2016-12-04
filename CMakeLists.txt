@@ -17,10 +17,11 @@ set(AVR_UPLOADTOOL_PORT usb)
 # AVR and fuses needs to be set
 set(AVR_MCU atmega328p)
 set(AVR_H_FUSE 0xd9)
-set(AVR_L_FUSE 0xc3)
+set(AVR_L_FUSE 0xff)
+set(AVR_E_FUSE 0x05)
 
 # needs to be defined for AVR toolchain
-set(MCU_SPEED "16000000UL")
+set(MCU_SPEED "16000000")
 
 include(CMakeModules/generic-gcc-avr.cmake)
 include(CMakeModules/SimAVR.cmake)
@@ -36,6 +37,7 @@ message(STATUS "Current MCU is set to: ${AVR_MCU}")
 message(STATUS "Current MCU_SPEED is set to: ${MCU_SPEED}")
 message(STATUS "Current H_FUSE is set to: ${AVR_H_FUSE}")
 message(STATUS "Current L_FUSE is set to: ${AVR_L_FUSE}")
+message(STATUS "Current E_FUSE is set to: ${AVR_E_FUSE}")
 
 # set build type
 if(NOT CMAKE_BUILD_TYPE)
