@@ -15,12 +15,12 @@ set(AVR_PROGRAMMER avrispmkII)
 set(AVR_UPLOADTOOL_PORT usb)
 
 # AVR and fuses needs to be set
-set(AVR_MCU atmega16)
+set(AVR_MCU atmega328p)
 set(AVR_H_FUSE 0xd9)
 set(AVR_L_FUSE 0xc3)
 
 # needs to be defined for AVR toolchain
-set(MCU_SPEED "4000000UL")
+set(MCU_SPEED "16000000UL")
 
 include(CMakeModules/generic-gcc-avr.cmake)
 include(CMakeModules/SimAVR.cmake)
@@ -60,7 +60,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 # not added automatically, since CMAKE_SYSTEM_NAME is "generic"
-set(CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_FIND_ROOT_PATH}/include:${SIMAVR_INCLUDE_DIR}")
+set(CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_FIND_ROOT_PATH}/include")
 set(CMAKE_SYSTEM_LIBRARY_PATH "${CMAKE_FIND_ROOT_PATH}/lib")
 
 # status messages for generating
@@ -97,6 +97,7 @@ add_definitions("-funsigned-bitfields")
 add_definitions("-ffunction-sections")
 add_definitions("-c")
 add_definitions("-std=gnu99")
+add_definitions("-Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000")
 
 # Files
 include_directories(inc)

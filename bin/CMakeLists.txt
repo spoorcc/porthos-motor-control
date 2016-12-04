@@ -8,13 +8,13 @@
 # Matthias Kleemann
 
 add_vcd_trace(toggle-led ${AVR_MCU} ${MCU_SPEED}
-     "OUTPUT,2,PORTD"
+     "PORTD(2),2,PORTD"
 )
 
 add_avr_executable(
    toggle-led
+   ${toggle-led_VCD_TRACE_FILE}
    main.c
-   ${project_VCD_TRACE_FILE}
 )
 
 # find_library(M_LIB m)

@@ -24,13 +24,18 @@ find_path(SIMAVR_INCLUDE_DIR
         /usr/local/include/
 )
 
+include_directories(${SIMAVR_INCLUDE_DIR})
+
 macro(add_sim_target target_name mcu clock_speed)
 
     if(SIMAVR)
+        # Strip UL part from clock_speed
+        string(REPLACE "UL" "" clock_speed clock_speed)
+
+        # Construct elf file name
+        set(elf_file ${target_name}-${mcu}.elf)
+
         # create sim avr targets
-
-        set(elf_file ${target_name}-${mcu}.hex)
-
         message("-- Adding command: sim-${target_name}")
         add_custom_command(
             OUTPUT "sim-${elf_file}"
@@ -79,6 +84,7 @@ macro(add_vcd_trace target_name mcu clock_speed)
     set(TRACE_FILE "${CMAKE_CURRENT_BINARY_DIR}/${FILENAME}")
 
     # generate the file
+    # TODO: pragma stuff is stupid!
     file(WRITE ${TRACE_FILE}
         "// Auto generated file by cmake\n"
         "// Generated VCD trace info for ${mcu} with clock speed ${clock_speed}\n\n"
@@ -86,12 +92,14 @@ macro(add_vcd_trace target_name mcu clock_speed)
         "#include <avr/io.h>\n"
 
         "#include <simavr/avr/avr_mcu_section.h>\n\n"
-        "AVR_MCU(${clock_speed}, \"${AVR_MCU}\");\n"
-        "AVR_MCU_VCD_FILE(\"${target_name}_trace.vcd\", 1000);\n\n"
 
         "const struct avr_mmcu_vcd_trace_t _mytrace[] _MMCU_ = {\n"
         "${trace_list}"
-        "};\n"
+        "};\n\n"
+
+        "#pragma GCC diagnostic ignored \"-Woverflow\"\n"
+        "AVR_MCU( ${clock_speed}, \"${AVR_MCU}\");\n"
+        "AVR_MCU_VCD_FILE(\"${target_name}_trace.vcd\", 1000);\n\n"
     )
 
     set("${target_name}_VCD_TRACE_FILE" ${TRACE_FILE})

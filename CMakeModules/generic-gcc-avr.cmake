@@ -163,7 +163,7 @@ function(add_avr_executable EXECUTABLE_NAME)
       ${elf_file}
       PROPERTIES
          COMPILE_FLAGS "-mmcu=${AVR_MCU}"
-         LINK_FLAGS "-mmcu=${AVR_MCU} -Wl,--gc-sections -mrelax -Wl,-Map,${map_file}"
+         LINK_FLAGS "-mmcu=${AVR_MCU} -Wl,--gc-sections -mrelax -Wl,-Map,${map_file} -Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000"
    )
 
    add_custom_command(

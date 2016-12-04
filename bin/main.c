@@ -26,5 +26,7 @@ int main(void)
    {
       togglePin();
    }
+
+   return 0;
 }
 
