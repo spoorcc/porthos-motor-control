@@ -2,19 +2,19 @@
 # license):
 # <dev@layer128.net> wrote this file. As long as you retain this notice
 # you can do whatever you want with this stuff. If we meet some day, and
-# you think this stuff is worth it, you can buy me a be(ve)er(age) in
+# you think this stuff is worth it, you can buy me a be(ve)er(age) in 
 # return. (I don't like beer much.)
 #
 # Matthias Kleemann
 
-add_vcd_trace(toggle-led ${AVR_MCU} ${MCU_SPEED}
+add_vcd_trace(porthos-mc ${AVR_MCU} ${MCU_SPEED}
      "PORTD(2),PIN2,PORTD"
 )
-add_sim_target(toggle-led ${AVR_MCU} ${MCU_SPEED})
+add_sim_target(porthos-mc ${AVR_MCU} ${MCU_SPEED})
 
 add_avr_executable(
-   toggle-led
-   ${toggle-led_VCD_TRACE_FILE}
+   porthos-mc
+   ${porthos-mc_VCD_TRACE_FILE}
    main.c
 )
 
@@ -24,5 +24,6 @@ add_avr_executable(
 find_library(C_LIB c)
 message(STATUS "avr-libc: ${C_LIB}")
 
-avr_target_link_libraries(toggle-led lib ${C_LIB})
+avr_target_link_libraries(porthos-mc serial move ${C_LIB})
+
 
