@@ -8,8 +8,9 @@
 # Matthias Kleemann
 
 add_vcd_trace(toggle-led ${AVR_MCU} ${MCU_SPEED}
-     "PORTD(2),2,PORTD"
+     "PORTD(2),PIN2,PORTD"
 )
+add_sim_target(toggle-led ${AVR_MCU} ${MCU_SPEED})
 
 add_avr_executable(
    toggle-led
@@ -25,4 +26,3 @@ message(STATUS "avr-libc: ${C_LIB}")
 
 avr_target_link_libraries(toggle-led lib ${C_LIB})
 
-add_sim_target(toggle-led ${AVR_MCU} ${MCU_SPEED})
