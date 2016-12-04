@@ -7,8 +7,14 @@
 #
 # Matthias Kleemann
 
+add_vcd_trace(toggle-led ${AVR_MCU} ${MCU_SPEED}
+     "PORTD(2),PIN2,PORTD"
+)
+add_sim_target(toggle-led ${AVR_MCU} ${MCU_SPEED})
+
 add_avr_executable(
    toggle-led
+   ${toggle-led_VCD_TRACE_FILE}
    main.c
 )
 

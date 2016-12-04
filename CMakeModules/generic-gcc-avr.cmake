@@ -18,6 +18,8 @@
 #     the LOW fuse value for the MCU used
 # AVR_H_FUSE (NO DEFAULT)
 #     the HIGH fuse value for the MCU used
+# AVR_E_FUSE (NO DEFAULT)
+#     the EXTENDED fuse value for the MCU used
 # AVR_UPLOADTOOL (default: avrdude)
 #     the application used to upload to the MCU
 #     NOTE: The toolchain is currently quite specific about
@@ -163,7 +165,7 @@ function(add_avr_executable EXECUTABLE_NAME)
       ${elf_file}
       PROPERTIES
          COMPILE_FLAGS "-mmcu=${AVR_MCU}"
-         LINK_FLAGS "-mmcu=${AVR_MCU} -Wl,--gc-sections -mrelax -Wl,-Map,${map_file}"
+         LINK_FLAGS "-mmcu=${AVR_MCU} -Wl,--gc-sections -mrelax -Wl,-Map,${map_file} -Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000"
    )
 
    add_custom_command(
@@ -247,7 +249,8 @@ function(add_avr_executable EXECUTABLE_NAME)
       ${AVR_UPLOADTOOL} -p ${AVR_MCU} -c ${AVR_PROGRAMMER} -P ${AVR_UPLOADTOOL_PORT}
          -U lfuse:w:${AVR_L_FUSE}:m
          -U hfuse:w:${AVR_H_FUSE}:m
-         COMMENT "Setup: High Fuse: ${AVR_H_FUSE} Low Fuse: ${AVR_L_FUSE}"
+         -U efuse:w:${AVR_E_FUSE}:m
+         COMMENT "Setup: High Fuse: ${AVR_H_FUSE} Low Fuse: ${AVR_L_FUSE} Extended Fuse: ${AVR_E_FUSE}"
    )
 
    # get oscillator calibration
