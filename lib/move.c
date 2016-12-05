@@ -2,36 +2,112 @@
 
 #include "move.h"
 
+/** M1 Speed Control */
+#define M1_PWM PIN5
+/** M2 Speed Control */
+#define M2_PWM PIN6
+/** M1 Direction Control */
+#define M1_DIR PIN4
+/** M2 Direction Control */
+#define M2_DIR PIN7
+
+#define FORWARD (1)
+#define BACKWARD (0)
+
+#define TURNSPEED (128)
+#define MOVESPEED (255)
+
+typedef enum{
+    MOTOR1 = 0,
+    MOTOR2
+}motor_enum_t;
+
+
+static void set_pwm(motor_enum_t motor, unsigned char value);
+static void set_dir(motor_enum_t motor, unsigned char direction);
+
 /**
   \brief Initialization of Movement library
 */
 void move_init(void)
 {
-    //todo
+    /* Set M1 & M2 pins as output */
+    DDRD |= (1 << M1_PWM);
+    DDRD |= (1 << M2_PWM);
+    DDRD |= (1 << M1_DIR);
+    DDRD |= (1 << M2_DIR);
+
+    /* Configure PWM */
+    //\todo
 }
 
 void move_stop(void)
 {
-    //todo
+    set_pwm(MOTOR1, 0);
+    set_pwm(MOTOR2, 0);
 }
 
 void move_forward(void)
 {
-    //todo
+    set_dir(MOTOR1, FORWARD);
+    set_dir(MOTOR2, FORWARD);
+    set_pwm(MOTOR1, MOVESPEED);
+    set_pwm(MOTOR2, MOVESPEED);
 }
 
 void move_left(void)
 {
-    //todo
+    set_dir(MOTOR1, FORWARD);
+    set_dir(MOTOR2, BACKWARD);
+    set_pwm(MOTOR1, TURNSPEED);
+    set_pwm(MOTOR2, TURNSPEED);
 }
 
 void move_backward(void)
 {
-    //todo
+    set_dir(MOTOR1, BACKWARD);
+    set_dir(MOTOR2, BACKWARD);
+    set_pwm(MOTOR1, MOVESPEED);
+    set_pwm(MOTOR2, MOVESPEED);
 }
 
 void move_right(void)
 {
-    //todo
+    set_dir(MOTOR1, BACKWARD);
+    set_dir(MOTOR2, FORWARD);
+    set_pwm(MOTOR1, TURNSPEED);
+    set_pwm(MOTOR2, TURNSPEED);
+}
+
+static void set_pwm(motor_enum_t motor, unsigned char value)
+{
+    switch(motor)
+    {
+        case MOTOR1:
+            OCR0B = value;
+            break;
+        case MOTOR2:
+            OCR0A = value;
+            break;
+    }
+}
+
+static void set_dir(motor_enum_t motor, unsigned char direction)
+{
+    switch(motor)
+    {
+        case MOTOR1:
+            if (direction)
+                PORTD |= (1 << M1_DIR);
+            else
+                PORTD &= ~(1 << M1_DIR);
+            break;
+        case MOTOR2:
+            if (direction)
+                PORTD |= (1 << M2_DIR);
+            else
+                PORTD &= ~(1 << M2_DIR);
+            break;
+    }
 }
 
