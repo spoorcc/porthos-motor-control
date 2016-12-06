@@ -11,8 +11,8 @@ cmake_minimum_required(VERSION 2.8)
 
 # tools to beused for programming the AVR
 set(AVR_UPLOADTOOL avrdude)
-set(AVR_PROGRAMMER avrispmkII)
-set(AVR_UPLOADTOOL_PORT usb)
+set(AVR_PROGRAMMER arduino)
+set(AVR_UPLOADTOOL_PORT /dev/ttyACM0)
 
 # AVR and fuses needs to be set
 set(AVR_MCU atmega328p)
