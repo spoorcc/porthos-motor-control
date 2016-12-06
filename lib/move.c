@@ -38,7 +38,15 @@ void move_init(void)
     DDRD |= (1 << M2_DIR);
 
     /* Configure PWM */
-    //\todo
+
+    /* set none-inverting mode */
+    TCCR0A |= (1 << COM0A1);
+
+    /* set fast PWM Mode */
+    TCCR0A |= (1 << WGM01) | (1 << WGM00);
+
+    /* set prescaler to 8 and starts PWM */
+    TCCR0B |= (1 << CS01);
 }
 
 void move_stop(void)
