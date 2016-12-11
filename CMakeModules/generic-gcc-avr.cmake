@@ -240,6 +240,7 @@ function(add_avr_executable EXECUTABLE_NAME)
       ${AVR_UPLOADTOOL} -p ${AVR_MCU} -c ${AVR_PROGRAMMER} -P ${AVR_UPLOADTOOL_PORT} -n
          -U lfuse:r:-:b
          -U hfuse:r:-:b
+         -U efuse:r:-:b
       COMMENT "Get fuses from ${AVR_MCU}"
    )
 
