@@ -12,6 +12,7 @@ compiler:
   - gcc
 
 script:
+  - avr-gcc --version
   - mkdir -p bld
   - cd bld
   - cmake ..
