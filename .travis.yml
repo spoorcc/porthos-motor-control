@@ -1,4 +1,5 @@
 language: cpp
+dist: trusty
 sudo: false
 
 addons:
@@ -6,13 +7,15 @@ addons:
     packages:
       - cmake
       - gcc-avr
+      - avr-libc
+      - libelf-dev
 
 compiler:
   - gcc
 
 script:
+  - avr-gcc --version
   - mkdir -p bld
   - cd bld
   - cmake ..
   - make
-  - make test

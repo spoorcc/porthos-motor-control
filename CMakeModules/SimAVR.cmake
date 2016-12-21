@@ -1,30 +1,21 @@
 # Taken from https://nnarain.github.io/2016/04/09/Debugging-with-SimAVR.html
 
-find_program(SIMAVR
-    NAME
-        simavr
+set(SIMAVR_DIR ${CMAKE_BINARY_DIR}/ext/simavr)
 
-    PATHS
-        /usr/bin/
-        $ENV{SIMAVR_HOME}
-)
+file(MAKE_DIRECTORY ${SIMAVR_DIR})
+include(ExternalProject)
+externalproject_add(SimAVR
+    PREFIX                ${SIMAVR_DIR}
+    GIT_REPOSITORY        https://github.com/buserror/simavr.git
+    GIT_TAG               "v1.4"
+    BUILD_COMMAND         make build-simavr
+    BUILD_IN_SOURCE       1
+    CONFIGURE_COMMAND     ""
+    INSTALL_COMMAND       make install DESTDIR=${SIMAVR_DIR}/Install
+ )
 
-if(NOT SIMAVR)
-    message("-- Could not find simavr")
-else(NOT SIMAVR)
-    message("-- Found simavr: ${SIMAVR}")
-endif(NOT SIMAVR)
 
-find_path(SIMAVR_INCLUDE_DIR
-    NAMES
-        "simavr/avr/avr_mcu_section.h"
-
-    PATHS
-        /usr/include/
-        /usr/local/include/
-)
-
-include_directories(${SIMAVR_INCLUDE_DIR})
+include_directories(${SIMAVR_DIR}/Install/include)
 
 macro(add_sim_target target_name mcu clock_speed)
 
