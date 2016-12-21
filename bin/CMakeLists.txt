@@ -9,6 +9,10 @@
 
 #add_vcd_trace(porthos-mc ${AVR_MCU} ${MCU_SPEED}
 #     "PORTD(2),PIN2,PORTD"
+#     "PORTD(4),PIN4,PORTD"
+#     "PORTD(5),PIN5,PORTD"
+#     "PORTD(6),PIN6,PORTD"
+#     "PORTD(7),PIN7,PORTD"
 #)
 add_sim_target(porthos-mc ${AVR_MCU} ${MCU_SPEED})
 
