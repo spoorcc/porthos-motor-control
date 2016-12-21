@@ -1,28 +1,47 @@
 # Taken from https://nnarain.github.io/2016/04/09/Debugging-with-SimAVR.html
 
-find_program(SIMAVR
-    NAME
-        simavr
+set(SIMAVR_DIR ${CMAKE_BINARY_DIR}/ext/simavr)
 
-    PATHS
-        /usr/bin/
-        $ENV{SIMAVR_HOME}
-)
+file(MAKE_DIRECTORY ${SIMAVR_DIR})
+include(ExternalProject)
+externalproject_add(SimAVR
+    SOURCE_DIR            ${SIMAVR_DIR}
+    GIT_REPOSITORY        https://github.com/buserror/simavr.git
+    GIT_TAG               "v1.4"
+    BUILD_COMMAND         make build-simavr
+    BUILD_IN_SOURCE       1
+    CONFIGURE_COMMAND     ""
+    INSTALL_COMMAND       make install DESTDIR=${SIMAVR_DIR}/Install
+ )
 
-if(NOT SIMAVR)
-    message("-- Could not find simavr")
-else(NOT SIMAVR)
-    message("-- Found simavr: ${SIMAVR}")
-endif(NOT SIMAVR)
 
-find_path(SIMAVR_INCLUDE_DIR
-    NAMES
-        "simavr/avr/avr_mcu_section.h"
+include_directories(${SIMAVR_DIR}/Install/include)
 
-    PATHS
-        /usr/include/
-        /usr/local/include/
-)
+#find_program(SIMAVR
+#    NAME
+#        simavr
+#
+#    PATHS
+#        ${SIMAVR_DIR}
+#        /usr/bin/
+#        $ENV{SIMAVR_HOME}
+#)
+#
+#if(NOT SIMAVR)
+#    message("-- Could not find simavr")
+#else(NOT SIMAVR)
+#    message("-- Found simavr: ${SIMAVR}")
+#endif(NOT SIMAVR)
+#
+#find_path(SIMAVR_INCLUDE_DIR
+#    NAMES
+#        "simavr/avr/avr_mcu_section.h"
+#
+#    PATHS
+#        ${SIMAVR_DIR}
+#        /usr/include/
+#        /usr/local/include/
+#)
 
 include_directories(${SIMAVR_INCLUDE_DIR})
 
