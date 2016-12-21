@@ -8,6 +8,7 @@ addons:
       - cmake
       - gcc-avr
       - avr-libc
+      - libelf-dev
 
 compiler:
   - gcc
