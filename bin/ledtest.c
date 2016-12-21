@@ -16,10 +16,11 @@ int main(void)
         // toggle pin
         PORTB ^= (1 << PIN5);
         // wait for 250ms
-        _delay_ms(15000);
+        //_delay_ms(500);
+        //while(data--);
 
         data = serial_receive();
-        serial_transmit(data);
+        serial_transmit(data + 1);
     }
 
     return 0;
