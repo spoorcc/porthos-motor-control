@@ -5,6 +5,7 @@ from bluetooth.ble import DiscoveryService
 
 from time import sleep
 import sys
+import copy
 import binascii
 from bluetooth.ble import GATTRequester, GATTResponse
 
@@ -13,6 +14,11 @@ SERIAL_PORT_UUID='0000dfb1-0000-1000-8000-00805f9b34fb'
 COMMAND_UUID='0000dfb2-0000-1000-8000-00805f9b34fb'
 MODEL_STRING_NUMBER_UUID='00002a24-0000-1000-8000-00805f9b34fb'
 DEVICE_NAME_UUID='00002a00-0000-1000-8000-00805f9b34fb'
+
+sys.settrace
+
+def raw_data_to_list(data):
+    return list(map(hex, map(ord, data)))
 
 class Receive(GATTResponse):
 
@@ -24,15 +30,19 @@ class Requester(GATTRequester):
       tx_bytes = 0
 
       def on_notification(self, handle, data):
-          print("\n>>{}<<\n".format(data.decode('utf-8')))
+          ''' Prints handle and list of hex values received '''
+          
+          fields = raw_data_to_list(data)
+          print("\n>>0x{:04x} : {}<<\n".format(handle, fields))
 
-      def write_data(self, data):
+      def write_data(self, handle, data):
           print("Sending {} bytes: ".format(len(data)), end="")
 
           for d in data:
-              print("{}".format(d), end="")
+              print("0x{:02X}".format(d), end="")
               sys.stdout.flush()
-              self.write_by_handle(0x0025, str(d))
+              #self.write_by_handle(0x0025, str(d))
+              self.write_by_handle(handle, str(d))
 
           print(" --> OK! {}".format(self.tx_bytes))
 
@@ -41,10 +51,12 @@ class Reader(object):
         self.address = address
         self.requester = Requester(address, False)
         self.connect()
-        self.get_device_name()
-        self.get_model_name()
+        self.device_name = self.get_device_name()
+        self.model_name = self.get_model_name()
 
-        print("Init done")
+        self.serial_handle = self.handle_from_uuid(SERIAL_PORT_UUID)
+
+        print("Connected to {self.device_name} - {self.model_name} at {self.address} - Serial handle: {self.serial_handle:04x}".format(self=self))
 
     def connect(self):
         print("Connecting to ", self.address, end='  ')
@@ -53,31 +65,34 @@ class Reader(object):
         self.requester.connect(True)
         print("OK!")
 
-    def send(self, data):
+    def handle_from_uuid(self, uuid):
 
-        self.requester.write_data(bytes(data, 'utf-8'))
+        for char in self.requester.discover_characteristics():
+            if char['uuid'] == uuid:
+                return char['value_handle']
+
+    def send(self, data):
+        self.requester.write_data(self.serial_handle, bytes(data))
 
     def read(self):
-        data = self.requester.read_by_handle(0x0028)
-        print("Received {}".format(data))
+        #data = self.requester.read_by_handle(0x0028)
+        data = self.requester.read_by_uuid(SERIAL_PORT_UUID)
+        print("Received {}".format(raw_data_to_list(data)))
 
     def get_device_name(self):
-
-        [data] = self.requester.read_by_uuid(DEVICE_NAME_UUID)
-
-        try:
-            print("Device name: " + data.decode("utf-8"))
-        except AttributeError:
-            print("Device name: " + data)
+        return self.get_from_uuid(DEVICE_NAME_UUID)
 
     def get_model_name(self):
+        return self.get_from_uuid(MODEL_STRING_NUMBER_UUID)
 
-        [data] = self.requester.read_by_uuid(MODEL_STRING_NUMBER_UUID)
+    def get_from_uuid(self, uuid):
+
+        [data] = self.requester.read_by_uuid(uuid)
 
         try:
-            print("Model: " + data.decode("utf-8"))
+            return data.decode("utf-8")
         except AttributeError:
-            print("Model: " + data)
+            return data
 
 def get_bluno_addresses():
 
@@ -92,16 +107,10 @@ if __name__ == '__main__':
 
     for bluno in get_bluno_addresses():
         reader = Reader(bluno)
-        reader.send("+++\r\n") 
         while True:
-            reader.send("AT+FSM=?\r\n") 
-            reader.send("A") 
             sleep(3.0)
-            #reader.read()
-            #for i in range(1,255):
-                #self.requester.read_by_uuid_async(SERIAL_PORT_UUID, Receiver())
-                #sleep(0.1)
-                #reader.send(chr(i))
-                #reader.read()
+            for i in range(0, 0xff):
+                sleep(0.1)
+                reader.send([i])
 
 print("Done.")
