@@ -31,20 +31,19 @@ class Requester(GATTRequester):
 
       def on_notification(self, handle, data):
           ''' Prints handle and list of hex values received '''
-          
+
           fields = raw_data_to_list(data)
-          print("\n>>0x{:04x} : {}<<\n".format(handle, fields))
+          print(">>0x{:04x} : {}<<".format(handle, fields))
 
       def write_data(self, handle, data):
-          print("Sending {} bytes: ".format(len(data)), end="")
+          print("Sending {} bytes to {}: ".format(len(data), handle), end="")
 
           for d in data:
               print("0x{:02X}".format(d), end="")
               sys.stdout.flush()
-              #self.write_by_handle(0x0025, str(d))
-              self.write_by_handle(handle, str(d))
+              self.write_by_handle(handle, chr(d))
 
-          print(" --> OK! {}".format(self.tx_bytes))
+          print(" --> OK!")
 
 class Reader(object):
     def __init__(self, address):
@@ -108,9 +107,9 @@ if __name__ == '__main__':
     for bluno in get_bluno_addresses():
         reader = Reader(bluno)
         while True:
-            sleep(3.0)
-            for i in range(0, 0xff):
-                sleep(0.1)
+            sleep(0.5)
+            for i in range(0x00, 0x0f):
+                sleep(1.5)
                 reader.send([i])
 
 print("Done.")

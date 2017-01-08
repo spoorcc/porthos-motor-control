@@ -6,6 +6,7 @@
 int main(void)
 {
     unsigned char data = 0x0;
+    unsigned long cntr = 0;
 
     DDRB |= (1 << PIN5);
 
@@ -17,9 +18,10 @@ int main(void)
         PORTB ^= (1 << PIN5);
         // wait for 250ms
         //_delay_ms(500);
-        //while(data--);
 
         data = serial_receive();
+        cntr= 100000;
+        while(cntr--);
         serial_transmit(data + 1);
     }
 
