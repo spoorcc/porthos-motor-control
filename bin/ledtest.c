@@ -6,7 +6,7 @@
 int main(void)
 {
     unsigned char data = 0x0;
-    unsigned long cntr = 0;
+    // unsigned long cntr = 0;
 
     DDRB |= (1 << PIN5);
 
@@ -20,8 +20,8 @@ int main(void)
         //_delay_ms(500);
 
         data = serial_receive();
-        cntr= 100000;
-        while(cntr--);
+        //cntr= 100000;
+        //while(cntr--);
         serial_transmit(data + 1);
     }
 

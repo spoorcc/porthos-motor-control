@@ -126,11 +126,11 @@ if __name__ == '__main__':
         bluno = Bluno(address)
         while True:
 
-            msg = [i for i in range(0x00, 0x03)]
+            msg = [i for i in range(0x00, 0x10)]
             bluno.send(msg)
-            sleep(0.3)
+            sleep(0.08)
             recv = bluno.read()
-            logging.info(list(map(hex, recv)))
+            logging.debug(list(map(hex, recv)))
 
             assert(len(msg) == len(recv))
 
