@@ -1,23 +1,31 @@
 #! /usr/bin/env python3
 
 from __future__ import print_function
+
 from bluetooth.ble import DiscoveryService
 from bluetooth.ble import GATTRequester, GATTResponse
-
+from collections import defaultdict
 from time import sleep
+
+import copy
+import logging
 import sys
 
-from collections import defaultdict
-
+logging.basicConfig(level=logging.INFO)
 
 def raw_data_to_list(data):
-    return list(map(hex, map(ord, data)))
+    return list(map(ord, data))
 
 
-class Receive(GATTResponse):
+def addresses_with_device_name(device_name):
 
-    def on_response(self, data):
-        print("Received: {}".format(data))
+    service = DiscoveryService()
+    devices = service.discover(2)
+
+    addresses = [address for address, name in devices.items()
+                 if device_name in name]
+
+    return addresses
 
 
 class Requester(GATTRequester):
@@ -32,21 +40,22 @@ class Requester(GATTRequester):
         # First three bytes do not contain the data
         self.rx_buf[hex(handle)] += fields[3:]
 
-    def flush_rx_buf(self):
+        logging.debug("RX >> {}: {}".format(hex(handle),
+                                            list(map(hex, fields[3:]))))
 
-        for handle, data in self.rx_buf.items():
-            print("RX >> {}: {}".format(handle, data))
+    def read_data(self, handle):
+        ''' Read and empty buffer of given handle '''
 
-        self.rx_buf = defaultdict(list)
+        data = bytes(self.rx_buf[hex(handle)])
+        self.rx_buf[hex(handle)] = []
+
+        return data
 
     def write_data(self, handle, data):
-        print("TX << 0x{:04x}: [".format(handle), end="")
-
-        for d in data:
-            print("'0x{:02X}'".format(d), end=", ")
-            sys.stdout.flush()
-            self.write_by_handle(handle, chr(d))
-        print("]")
+        ''' Write given list of values to given handle '''
+        logging.debug("TX << 0x{:x}: {}".format(handle,
+                                                [hex(d) for d in data]))
+        self.write_by_handle(handle, bytes(data))
 
 
 class Bluno(object):
@@ -61,39 +70,47 @@ class Bluno(object):
     def __init__(self, address):
         self.address = address.strip()
         self.requester = Requester(address, False)
-        self.connect()
-        self.device_name = self.get_from_uuid(self.DEVICE_NAME_UUID)
-        self.model_name = self.get_from_uuid(self.MODEL_STRING_NUMBER_UUID)
-
-        self.serial_handle = self.handle_from_uuid(self.SERIAL_PORT_UUID)
-
-        print("Connected to {self.device_name} \
-              - {self.model_name} at {self.address} - \
-              Serial handle: {self.serial_handle:04x}".format(self=self))
+        self.connected = False
+        self.device_name = ""
+        self.model_name = ""
+        self.serial_handle = 0x0
 
     def connect(self):
-        print("Connecting to ", self.address, end='  ')
-        sys.stdout.flush()
+        ''' Connects to address stored in object '''
+        logging.info("Connecting to {}".format(self.address))
 
         self.requester.connect(True)
-        print("OK!")
+        self.connected = True
+
+        self.device_name = self._get_from_uuid(self.DEVICE_NAME_UUID)
+        self.model_name = self._get_from_uuid(self.MODEL_STRING_NUMBER_UUID)
+
+        self.serial_handle = self._handle_from_uuid(self.SERIAL_PORT_UUID)
+
+        logging.debug("Connected to device: {}".format(self.device_name))
+        logging.debug("              model: {}".format(self.model_name))
+        logging.debug("            address: {}".format(self.address))
+        logging.debug("      serial handle: 0x{:04x}".format(self.serial_handle))
 
     def send(self, data):
+        ''' Send data to serial port of Bluno '''
+        if not self.connected: self.connect()
+
         self.requester.write_data(self.serial_handle, bytes(data))
-        sleep(0.1)
-        self.requester.flush_rx_buf()
 
     def read(self):
-        data = self.requester.read_by_uuid(self.SERIAL_PORT_UUID)
-        print("Received {}".format(raw_data_to_list(data)))
+        ''' Read all data received from serial connection '''
 
-    def handle_from_uuid(self, uuid):
+        return self.requester.read_data(self.serial_handle)
+
+    def _handle_from_uuid(self, uuid):
+        ''' Retrieve hex handle based based on uuid '''
 
         for char in self.requester.discover_characteristics():
             if char['uuid'] == uuid:
                 return char['value_handle']
 
-    def get_from_uuid(self, uuid):
+    def _get_from_uuid(self, uuid):
 
         [data] = self.requester.read_by_uuid(uuid)
 
@@ -103,23 +120,23 @@ class Bluno(object):
             return data
 
 
-def get_bluno_addresses():
-
-    service = DiscoveryService()
-    devices = service.discover(2)
-
-    addresses = [address for address, name in devices.items()
-                 if name.startswith('Bluno')]
-
-    return addresses
-
-
 if __name__ == '__main__':
 
-    for address in get_bluno_addresses():
+    for address in addresses_with_device_name('Bluno'):
         bluno = Bluno(address)
         while True:
-            for i in range(0x00, 0x0f):
-                bluno.send([i, i+1])
 
-print("Done.")
+            msg = [i for i in range(0x00, 0x03)]
+            bluno.send(msg)
+            sleep(0.3)
+            recv = bluno.read()
+            logging.info(list(map(hex, recv)))
+
+            assert(len(msg) == len(recv))
+
+            for rx, tx in zip(recv, msg):
+                try:
+                    assert(rx == tx+1)
+                except AssertionError:
+                    logging.error("RX {} != TX{} + 1".format(rx, tx))
+
