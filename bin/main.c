@@ -7,6 +7,7 @@
 #include <avr/io.h>
 #include "serial.h"
 #include "move.h"
+#include "led.h"
 
 /**
  * \brief main loop
@@ -25,6 +26,7 @@ int main(void)
    while(1)
    {
       data = serial_receive();
+      led_toggle();
 
       decode_command(data);
    }
@@ -42,17 +44,17 @@ void decode_command(unsigned char command)
 {
     switch(command)
     {
-        case 'w':
+        case 0x01:
             move_forward();
             break;
-        case 'a':
-            move_left();
+        case 0x02:
+            move_right();
             break;
-        case 's':
+        case 0x03:
             move_backward();
             break;
-        case 'd':
-            move_right();
+        case 0x04:
+            move_left();
             break;
         default:
             move_stop();
