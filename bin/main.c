@@ -36,6 +36,7 @@ int main(void)
 
 void setup(void)
 {
+    led_init();
     move_init();
     serial_init(MYUBRR);
 }
