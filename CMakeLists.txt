@@ -101,9 +101,16 @@ add_definitions("-c")
 add_definitions("-std=gnu99")
 add_definitions("-Wl,--undefined=_mmcu,--section-start=.mmcu=0x910000")
 
+# Documentation
+SET ( PORTHOS_TITLE "Porthos" )
+SET ( PORTHOS_SUBTITLE "An-embedded-linux-robot" )
+SET ( PORTHOS_VERSION "0.0.0-cmake" )
+OPTION(BUILD_PORTHOS_DOCUMENTATION "Create doxygen documentation for developers" ON)
+
 # Files
 include_directories(inc)
 
 add_subdirectory(lib)
 add_subdirectory(bin)
+add_subdirectory(doc)
 

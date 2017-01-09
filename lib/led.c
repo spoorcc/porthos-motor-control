@@ -3,6 +3,11 @@
 #include "led.h"
 
 
+/** \addtogroup led-library
+ *  Library for fixed led
+ *  @{
+ */
+
 /**
   \brief Initialization of LED
 */
@@ -34,3 +39,5 @@ void led_off( )
 {
     PORTB &= ~(1 << PIN5);
 }
+
+/** @}*/

@@ -26,6 +26,11 @@ typedef enum{
 static void set_pwm(motor_enum_t motor, unsigned char value);
 static void set_dir(motor_enum_t motor, unsigned char direction);
 
+/** \addtogroup move-library
+ *  Library for moving robot
+ *  @{
+ */
+
 /**
   \brief Initialization of Movement library
 */
@@ -50,12 +55,18 @@ void move_init(void)
     TCCR0B |= (1 << CS01) | (1 << CS00);
 }
 
+/**
+  \brief Stops both motors
+*/
 void move_stop(void)
 {
     set_pwm(MOTOR1, 0);
     set_pwm(MOTOR2, 0);
 }
 
+/**
+  \brief Moves both motors forward
+*/
 void move_forward(void)
 {
     set_dir(MOTOR1, FORWARD);
@@ -64,6 +75,9 @@ void move_forward(void)
     set_pwm(MOTOR2, MOVESPEED);
 }
 
+/**
+  \brief Turns robot left
+*/
 void move_left(void)
 {
     set_dir(MOTOR1, FORWARD);
@@ -72,6 +86,9 @@ void move_left(void)
     set_pwm(MOTOR2, TURNSPEED);
 }
 
+/**
+  \brief Moves robot backward
+*/
 void move_backward(void)
 {
     set_dir(MOTOR1, BACKWARD);
@@ -80,6 +97,9 @@ void move_backward(void)
     set_pwm(MOTOR2, MOVESPEED);
 }
 
+/**
+  \brief Turns robot to the right
+*/
 void move_right(void)
 {
     set_dir(MOTOR1, BACKWARD);
@@ -87,6 +107,8 @@ void move_right(void)
     set_pwm(MOTOR1, TURNSPEED);
     set_pwm(MOTOR2, TURNSPEED);
 }
+
+/** @}*/
 
 static void set_pwm(motor_enum_t motor, unsigned char value)
 {
