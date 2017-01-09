@@ -11,7 +11,7 @@ import copy
 import logging
 import sys
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 def raw_data_to_list(data):
     return list(map(ord, data))
@@ -119,24 +119,31 @@ class Bluno(object):
         except AttributeError:
             return data
 
+def serial_test():
+    msg = [i for i in range(0x00, 0x10)]
+    bluno.send(msg)
+    sleep(0.08)
+    recv = bluno.read()
+    logging.debug(list(map(hex, recv)))
+
+    assert(len(msg) == len(recv))
+
+    for rx, tx in zip(recv, msg):
+        try:
+            assert(rx == tx+1)
+        except AssertionError:
+            logging.error("RX {} != TX{} + 1".format(rx, tx))
+
+def motor_test():
+
+    for msg in range(0x00, 0x05):
+        bluno.send([msg])
+        sleep(3.0)
 
 if __name__ == '__main__':
 
     for address in addresses_with_device_name('Bluno'):
         bluno = Bluno(address)
         while True:
-
-            msg = [i for i in range(0x00, 0x10)]
-            bluno.send(msg)
-            sleep(0.08)
-            recv = bluno.read()
-            logging.debug(list(map(hex, recv)))
-
-            assert(len(msg) == len(recv))
-
-            for rx, tx in zip(recv, msg):
-                try:
-                    assert(rx == tx+1)
-                except AssertionError:
-                    logging.error("RX {} != TX{} + 1".format(rx, tx))
+            motor_test()
 
