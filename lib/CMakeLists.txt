@@ -8,6 +8,11 @@
 # Matthias Kleemann
 
 add_avr_library(
+   led
+   led.c
+)
+
+add_avr_library(
    move
    move.c
 )
