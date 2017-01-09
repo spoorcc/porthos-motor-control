@@ -4,11 +4,21 @@
 # you can do whatever you want with this stuff. If we meet some day, and
 # you think this stuff is worth it, you can buy me a be(ve)er(age) in 
 # return. (I don't like beer much.)
-# 
+#
 # Matthias Kleemann
 
 add_avr_library(
-   lib
-   lib.c
+   led
+   led.c
+)
+
+add_avr_library(
+   move
+   move.c
+)
+
+add_avr_library(
+   serial
+   serial.c
 )
 

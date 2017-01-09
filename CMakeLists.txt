@@ -11,17 +11,17 @@ cmake_minimum_required(VERSION 2.8)
 
 # tools to beused for programming the AVR
 set(AVR_UPLOADTOOL avrdude)
-set(AVR_PROGRAMMER avrispmkII)
-set(AVR_UPLOADTOOL_PORT usb)
+set(AVR_PROGRAMMER arduino)
+set(AVR_UPLOADTOOL_PORT /dev/ttyACM0)
 
 # AVR and fuses needs to be set
 set(AVR_MCU atmega328p)
 set(AVR_H_FUSE 0xd9)
-set(AVR_L_FUSE 0xff)
-set(AVR_E_FUSE 0x05)
+set(AVR_L_FUSE 0x62)
+set(AVR_E_FUSE 0xff)
 
 # needs to be defined for AVR toolchain
-set(MCU_SPEED "16000000")
+set(MCU_SPEED "16000000UL")
 
 include(CMakeModules/generic-gcc-avr.cmake)
 include(CMakeModules/SimAVR.cmake)
