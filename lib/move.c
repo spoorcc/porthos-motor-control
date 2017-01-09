@@ -14,7 +14,7 @@
 #define FORWARD (1)
 #define BACKWARD (0)
 
-#define TURNSPEED (128)
+#define TURNSPEED (255)
 #define MOVESPEED (255)
 
 typedef enum{
@@ -41,12 +41,13 @@ void move_init(void)
 
     /* set none-inverting mode */
     TCCR0A |= (1 << COM0A1);
+    TCCR0A |= (1 << COM0B1);
 
     /* set fast PWM Mode */
     TCCR0A |= (1 << WGM01) | (1 << WGM00);
 
-    /* set prescaler to 8 and starts PWM */
-    TCCR0B |= (1 << CS01);
+    /* set prescaler to 64 and starts PWM */
+    TCCR0B |= (1 << CS01) | (1 << CS00);
 }
 
 void move_stop(void)
