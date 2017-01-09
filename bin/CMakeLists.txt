@@ -16,11 +16,10 @@
 #)
 add_sim_target(porthos-mc ${AVR_MCU} ${MCU_SPEED})
 
-#add_avr_executable(
-#   porthos-mc
-#   ${porthos-mc_VCD_TRACE_FILE}
-#   main.c
-#)
+add_avr_executable(
+   porthos-mc
+   main.c
+)
 
 # find_library(M_LIB m)
 # message(STATUS "avr-libm: ${M_LIB}")
@@ -28,13 +27,13 @@ add_sim_target(porthos-mc ${AVR_MCU} ${MCU_SPEED})
 find_library(C_LIB c)
 message(STATUS "avr-libc: ${C_LIB}")
 
-#avr_target_link_libraries(porthos-mc serial move ${C_LIB})
+avr_target_link_libraries(porthos-mc serial move led ${C_LIB})
 
 
-add_avr_executable(
-   ledtest
-   ledtest.c
-)
-
-avr_target_link_libraries(ledtest serial ${C_LIB})
+#add_avr_executable(
+#   ledtest
+#   ledtest.c
+#)
+#
+#avr_target_link_libraries(ledtest serial ${C_LIB})
 
