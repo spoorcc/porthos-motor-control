@@ -9,14 +9,18 @@
 #include "move.h"
 #include "led.h"
 
-/**
- * \brief main loop
- * Within the main loop the LED port(s) are initialized and toggled, using mylib. The
- * main loop never ends until switching off the AVR itself.
+/** \addtogroup Main
+ *  Main program
+ *  @{
  */
+
 void setup(void);
 void decode_command(unsigned char command);
 
+/**
+ * \brief main loop
+ * Receives message and controls motors
+ */
 int main(void)
 {
    unsigned char data = 0;
@@ -34,6 +38,10 @@ int main(void)
    return 0;
 }
 
+/**
+ * \brief setup
+ * Initialize all modules
+ */
 void setup(void)
 {
     led_init();
@@ -41,6 +49,10 @@ void setup(void)
     serial_init(MYUBRR);
 }
 
+/**
+ * \brief decode command
+ * Decodes command received and controls motors
+ */
 void decode_command(unsigned char command)
 {
     switch(command)
@@ -62,3 +74,4 @@ void decode_command(unsigned char command)
             break;
     }
 }
+/** @}*/

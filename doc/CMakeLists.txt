@@ -11,7 +11,8 @@ IF (BUILD_PORTHOS_DOCUMENTATION)
         SET( CMAKE_DOXYGEN_PROJECT_LOGO ""  )
 
         # Inputs
-        SET( DOXYGEN_SOURCE_DIR         "${CMAKE_SOURCE_DIR}/lib
+        SET( DOXYGEN_SOURCE_DIR         "${CMAKE_SOURCE_DIR}/bin
+                                         ${CMAKE_SOURCE_DIR}/lib
                                          ${CMAKE_SOURCE_DIR}/tst
                                          ${CMAKE_SOURCE_DIR}/doc/pages
                                          ${PROJECT_SOURCE_DIR}/README.md"  )
