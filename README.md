@@ -2,6 +2,7 @@
 
 
 [![Build Status](https://travis-ci.org/spoorcc/porthos-motor-control.svg?branch=master)](https://travis-ci.org/spoorcc/porthos-motor-control)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e5b7ddd3b3c74f12930a228c5f5c9e9e)](https://www.codacy.com/app/ben-spoor/porthos-motor-control?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=spoorcc/porthos-motor-control&amp;utm_campaign=Badge_Grade)
 
 Motor control firmware for Romeo BLE board
 
