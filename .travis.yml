@@ -6,6 +6,7 @@ addons:
   apt:
     packages:
       - cmake
+      - doxygen
       - gcc-avr
       - avr-libc
       - libelf-dev

@@ -3,6 +3,11 @@
 #include "serial.h"
 
 
+/** \addtogroup serial-library
+ *  Library for serial communication using HW USART
+ *  @{
+ */
+
 /**
   \brief Initialization of USART
 
@@ -37,7 +42,7 @@ void serial_transmit( unsigned char data )
 /**
   \brief Waits until data is received
 
-  \param [out] data
+  \retval data
 */
 unsigned char serial_receive( void )
 {
@@ -47,3 +52,5 @@ unsigned char serial_receive( void )
    /* Get and return received data from buffer */
    return UDR0;
 }
+
+/** @}*/
